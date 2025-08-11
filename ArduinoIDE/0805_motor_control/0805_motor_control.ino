@@ -1,43 +1,28 @@
-// 핀 설정
-const int stepPin = 3;     // STEP 핀
-const int dirPin = 4;      // DIR 핀
-const int enPin = 2;       // ENABLE 핀
+// 핀 번호 설정
+#define EN_PIN   2   // ENABLE
+#define STEP_PIN 3   // STEP
+#define DIR_PIN  4   // DIRECTION
 
 void setup() {
-  pinMode(stepPin, OUTPUT);
-  pinMode(dirPin, OUTPUT);
-  pinMode(enPin, OUTPUT);
+  pinMode(EN_PIN, OUTPUT);
+  pinMode(STEP_PIN, OUTPUT);
+  pinMode(DIR_PIN, OUTPUT);
 
-  // 모터 드라이버 활성화
-  digitalWrite(enPin, LOW);
-
-  // 회전 방향 설정 (HIGH = 정방향, LOW = 역방향)
-  digitalWrite(dirPin, HIGH);
+  digitalWrite(EN_PIN, LOW);  // ENABLE 활성화 (LOW가 활성)
+  digitalWrite(DIR_PIN, LOW); // 초기 방향
 }
 
 void loop() {
-  // 스텝 200개 = 1회전 (기본 1.8도 스텝 모터 기준)
+  // 정방향 200스텝 (1바퀴: 모터 스펙에 따라 다름)
   for (int i = 0; i < 200; i++) {
-    digitalWrite(stepPin, HIGH);
-    delayMicroseconds(1000); // 속도 조절 (값을 줄이면 빠르게 회전)
-    digitalWrite(stepPin, LOW);
-    delayMicroseconds(1000);
+    digitalWrite(STEP_PIN, HIGH);
+    delayMicroseconds(800); // 펄스 속도
+    digitalWrite(STEP_PIN, LOW);
+    delayMicroseconds(800);
   }
+  delay(500); // 잠시 대기
 
-  delay(1000); // 잠시 멈춤
-
-  // 방향 바꾸기
-  digitalWrite(dirPin, LOW);
-  delay(1000);
-
-  // 반대 방향으로 200스텝
-  for (int i = 0; i < 200; i++) {
-    digitalWrite(stepPin, HIGH);
-    delayMicroseconds(1000);
-    digitalWrite(stepPin, LOW);
-    delayMicroseconds(1000);
-  }
-
-  delay(1000);
-  digitalWrite(dirPin, HIGH); // 다시 정방향
+  // 방향 반대로 변경
+  digitalWrite(DIR_PIN, !digitalRead(DIR_PIN));
+  delay(500);
 }
